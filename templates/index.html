@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Palagio Máquinas e Equipamentos</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+
+        header {
+            background-color: blue;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        nav {
+            display: flex;
+            justify-content: center;
+            background-color: lime;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        nav a {
+            color: black;
+            padding: 14px 20px;
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+        }
+
+        nav a:hover {
+            background-color: #555;
+        }
+
+        .hero {
+            background-image: url('logo.jpg');
+            background-size: cover;
+            background-position: center;
+            height: 400px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 48px;
+            margin: 0;
+        }
+
+        section {
+            padding: 60px 20px;
+            display: none; /* Initially hide all sections */
+        }
+
+        #home {
+            display: block; /* Show the hero section by default */
+            background-color: #ffffff;
+        }
+
+        .content {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+        }
+
+        .content .card {
+            background-color: white;
+            margin: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            flex-basis: 300px;
+        }
+
+        .content .card img {
+            width: 100%;
+            height: auto;
+        }
+
+        .content .card h3 {
+            margin-top: 0;
+        }
+
+        footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Palagio Máquinas e Equipamentos</h1>
+    <p>Fabricação, reforma e modernização de máquinas e equipamentos.</p>
+</header>
+
+<nav>
+    <a onclick="showSection('home')">Início</a>
+    <a onclick="showSection('products')">Produtos</a>
+    <a onclick="showSection('services')">Serviços</a>
+    <a onclick="showSection('about')">Sobre</a>
+    <a onclick="showSection('contact')">Contato</a>
+</nav>
+
+<section id="home" class="hero" style="background-image: url('{{ url_for('static', filename='images/logo.jpg') }}');">
+
+</section>
+
+<section id="products">
+    <h2>Máquinas e Equipamentos</h2>
+    <div class="content">
+        <div class="card">
+            <img src="{{ url_for('static', filename='images/maq1.jpg') }}" alt="Machine 1">
+            <h3>Máquinas e Equipamentos </h3>
+            <p>.</p>
+        </div>
+        <div class="card">
+            <img src="{{ url_for('static', filename='images/maq1.jpg') }}" alt="Machine 2">
+            <h3>Máquinas e Equipamentos </h3>
+            <p>.</p>
+        </div>
+        <div class="card">
+            <img src="{{ url_for('static', filename='images/maq1.jpg') }}" alt="Machine 3">
+            <h3>Máquinas e Equipamentos </h3>
+            <p>.</p>
+        </div>
+    </div>
+</section>
+
+<section id="services">
+<h2>SERVIÇOS</h2>
+    <div class="content">
+        <div class="card">
+            <img src="{{ url_for('static', filename='images/uno.jpg') }}" alt="Machine 1">
+            <h3>Equipe qualificada!</h3>
+            <p>Pronta para reformar e construir!.</p>
+        </div>
+        <div class="card">
+            <img src="{{ url_for('static', filename='images/dos.jpg') }}" alt="Machine 2">
+            <h3>Retrofitting</h3>
+            <p>Dê vida nova àquela máquina antiga.</p>
+        </div>
+        <div class="card">
+            <img src="{{ url_for('static', filename='images/res.jpg') }}" alt="Machine 3">
+            <h3>Qualidade, precisão e excelência. </h3>
+            <p>Buscamos constantemente a perfeição em nossos produtos e serviços para atender às necessidades e expectativas dos clientes de forma eficiente e inovadora.</p>
+        </div>
+    </div>
+</section>
+
+<section id="about">
+    <h2>Localização:</h2>
+    <p>Rodovia RST-287, Km-109, Numero 1311, Fundos.</p>
+    <p>Município/UF: Vera Cruz, RS</p>
+    <p>Bairro: Distrito Industrial</p>
+    <p>CEP: 96.880-000.</p>
+</section>
+
+<section id="contact">
+    <h2>Celso Palagio:</h2>
+    <p>998436057</p>
+    <h2>Felipe Palagio:</h2>
+    <p>991643743</p>
+</section>
+
+<footer>
+    <p>&copy; 2024 PALAGIO USINAGEM INDUSTRIAL.</p>
+</footer>
+
+<script>
+    function showSection(sectionId) {
+        // Hide all sections
+        const sections = document.querySelectorAll('section');
+        sections.forEach(section => section.style.display = 'none');
+
+        // Show the selected section
+        const selectedSection = document.getElementById(sectionId);
+        selectedSection.style.display = 'block';
+    }
+</script>
+
+</body>
+</html>
