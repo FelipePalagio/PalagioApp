@@ -43,8 +43,8 @@
         }
 
         .hero {
-            background-image: url('logo.jpg');
-            background-size: cover;
+            background-size: contain;
+            background-repeat: no-repeat;
             background-position: center;
             height: 400px;
             display: flex;
@@ -52,6 +52,7 @@
             justify-content: center;
             color: white;
             text-align: center;
+            transition: background-image 2s ease-in-out;
         }
 
         .hero h1 {
@@ -98,6 +99,53 @@
             text-align: center;
             padding: 10px;
         }
+        #contact {
+            padding: 40px 20px;
+            background-color: #f4f4f4;
+            text-align: center;
+        }
+
+        #contact h2 {
+            font-size: 32px;
+            margin-bottom: 20px;
+            color: #333;
+            text-align: center;
+        }
+
+        .contact-card {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr); /* Two columns */
+            gap: 20px; /* Space between contact items */
+            max-width: 800px;
+            margin: 0 auto; /* Center the grid */
+        }
+
+        .contact-item {
+            background-color: white;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+
+        .contact-item h3 {
+            font-size: 24px;
+            margin: 0 0 10px;
+            color: #555;
+        }
+
+        .contact-item p {
+            font-size: 18px;
+            margin: 0;
+            color: #333;
+        }
+
+        /* Responsive design */
+        @media (max-width: 600px) {
+            .contact-card {
+                grid-template-columns: 1fr; /* Stack in one column on small screens */
+            }
+        }
+
     </style>
 </head>
 <body>
@@ -109,53 +157,31 @@
 
 <nav>
     <a onclick="showSection('home')">Início</a>
-    <a onclick="showSection('products')">Produtos</a>
     <a onclick="showSection('services')">Serviços</a>
     <a onclick="showSection('about')">Sobre</a>
     <a onclick="showSection('contact')">Contato</a>
 </nav>
 
-<section id="home" class="hero" style="background-image: url('{{ url_for('static', filename='images/logo.jpg') }}');">
-
+<section id="home" class="hero">
 </section>
 
-<section id="products">
-    <h2>Máquinas e Equipamentos</h2>
-    <div class="content">
-        <div class="card">
-            <img src="{{ url_for('static', filename='images/maq1.jpg') }}" alt="Machine 1">
-            <h3>Máquinas e Equipamentos </h3>
-            <p>.</p>
-        </div>
-        <div class="card">
-            <img src="{{ url_for('static', filename='images/maq1.jpg') }}" alt="Machine 2">
-            <h3>Máquinas e Equipamentos </h3>
-            <p>.</p>
-        </div>
-        <div class="card">
-            <img src="{{ url_for('static', filename='images/maq1.jpg') }}" alt="Machine 3">
-            <h3>Máquinas e Equipamentos </h3>
-            <p>.</p>
-        </div>
-    </div>
-</section>
 
 <section id="services">
-<h2>SERVIÇOS</h2>
+    <h2>SERVIÇOS</h2>
     <div class="content">
         <div class="card">
-            <img src="{{ url_for('static', filename='images/uno.jpg') }}" alt="Machine 1">
+            <img src="{{ url_for('static', filename='images/uno.jpg') }}" alt="Service 1">
             <h3>Equipe qualificada!</h3>
             <p>Pronta para reformar e construir!.</p>
         </div>
         <div class="card">
-            <img src="{{ url_for('static', filename='images/dos.jpg') }}" alt="Machine 2">
+            <img src="{{ url_for('static', filename='images/dos.jpg') }}" alt="Service 2">
             <h3>Retrofitting</h3>
             <p>Dê vida nova àquela máquina antiga.</p>
         </div>
         <div class="card">
-            <img src="{{ url_for('static', filename='images/res.jpg') }}" alt="Machine 3">
-            <h3>Qualidade, precisão e excelência. </h3>
+            <img src="{{ url_for('static', filename='images/res.jpg') }}" alt="Service 3">
+            <h3>Qualidade, precisão e excelência.</h3>
             <p>Buscamos constantemente a perfeição em nossos produtos e serviços para atender às necessidades e expectativas dos clientes de forma eficiente e inovadora.</p>
         </div>
     </div>
@@ -170,11 +196,27 @@
 </section>
 
 <section id="contact">
-    <h2>Celso Palagio:</h2>
-    <p>998436057</p>
-    <h2>Felipe Palagio:</h2>
-    <p>991643743</p>
-</section>
+        <h2>Ligue ou chame no WhatsApp!</h2>
+        <div class="contact-card">
+            <div class="contact-item">
+                <h3>Celso Palagio</h3>
+                <p>(51)99843-6057</p>
+            </div>
+            <div class="contact-item">
+                <h3>Alessandro Braun</h3>
+                <p>(51)99812-1502</p>
+            </div>
+            <div class="contact-item">
+                <h3>Lucas Palagio</h3>
+                <p>(51)99198-4009</p>
+            </div>
+            <div class="contact-item">
+                <h3>Felipe Palagio</h3>
+                <p>(51)99164-3743</p>
+            </div>
+        </div>
+    </section>
+
 
 <footer>
     <p>&copy; 2024 PALAGIO USINAGEM INDUSTRIAL.</p>
@@ -190,6 +232,28 @@
         const selectedSection = document.getElementById(sectionId);
         selectedSection.style.display = 'block';
     }
+
+    // Image slideshow for the hero section
+    const hero = document.querySelector('.hero');
+    const images = [
+        "{{ url_for('static', filename='images/grav.jpg') }}",
+        "{{ url_for('static', filename='images/hero.jpg') }}",
+        "{{ url_for('static', filename='images/hero2.jpg') }}",
+        "{{ url_for('static', filename='images/hero3.jpg') }}",
+        "{{ url_for('static', filename='images/logo.jpg') }}",
+    ];
+    let currentImageIndex = 4;
+
+    function changeBackgroundImage() {
+        hero.style.backgroundImage = `url('${images[currentImageIndex]}')`;
+        currentImageIndex = (currentImageIndex + 1) % images.length;
+    }
+
+    // Initialize the first image immediately
+    changeBackgroundImage();
+
+    // Change image every 5 seconds
+    setInterval(changeBackgroundImage, 5000);
 </script>
 
 </body>
