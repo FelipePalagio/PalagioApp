@@ -1,0 +1,217 @@
+document.addEventListener("DOMContentLoaded", () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const filename = urlParams.get("filename");
+    const name = urlParams.get("name");
+
+    if (filename && name) {
+        fetch(`/rotinas/${filename}`)
+            .then((response) => response.json())
+            .then((data) => {
+                document.body.innerHTML = ""; // Clear default content
+
+                // Create a container for routine details
+                const container = document.createElement("div");
+                container.style.padding = "20px";
+                container.style.fontFamily = "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif";
+                container.style.maxWidth = "800px";
+                container.style.margin = "auto";
+                container.style.backgroundColor = "#f4f4f4";
+                container.style.borderRadius = "10px";
+                container.style.boxShadow = "0px 4px 15px rgba(0, 0, 0, 0.1)";
+
+                // Title
+                const title = document.createElement("h2");
+                title.textContent = `${name}`;
+                title.style.textAlign = "center";
+                title.style.color = "#222"; // Darker text
+                title.style.marginBottom = "20px";
+                title.style.fontWeight = "600"; // Bolder font
+                container.appendChild(title);
+
+                // Display JSON data beautifully
+                const content = document.createElement("div");
+                content.appendChild(formatJson(data, filename)); // Format JSON with styling
+                container.appendChild(content);
+
+                // "Voltar" button with better styling
+                const backButton = document.createElement("button");
+                backButton.textContent = "Voltar";
+                backButton.style.marginTop = "20px";
+                backButton.style.padding = "10px 15px";
+                backButton.style.border = "none";
+                backButton.style.background = "#007BFF";
+                backButton.style.color = "white";
+                backButton.style.fontSize = "16px";
+                backButton.style.cursor = "pointer";
+                backButton.style.borderRadius = "5px";
+                backButton.style.width = "100%";
+                backButton.style.fontWeight = "500"; // Bolder font
+                backButton.onclick = () => window.close();
+                container.appendChild(backButton);
+
+                // Append everything to the body
+                document.body.appendChild(container);
+            })
+            .catch((error) => {
+                console.error("Erro ao carregar a rotina:", error);
+                document.body.innerHTML = "<p>Nenhum procedimento foi desenvolvido para esta peça.</p>";
+            });
+    } else {
+        document.body.innerHTML = "<p>Parâmetros inválidos.</p>";
+    }
+});
+
+/**
+ * Function to format JSON data into structured cards
+ */
+function formatJson(data, filename) {
+    const container = document.createElement("div");
+    container.style.overflowX = "auto";
+
+    if (Array.isArray(data)) {
+        data.forEach((item, index) => {
+            const card = document.createElement("div");
+            card.style.background = item.done ? "#e8f5e9" : "#ffebee"; // Light green if done, light red if not
+            card.style.padding = "15px";
+            card.style.margin = "10px 0";
+            card.style.borderRadius = "8px";
+            card.style.boxShadow = "0px 2px 10px rgba(0, 0, 0, 0.1)";
+            card.style.display = "flex";
+            card.style.flexDirection = "column";
+            card.style.alignItems = "flex-start";
+            card.style.justifyContent = "center";
+
+            // Display all routine information
+            for (const key in item) {
+                if (key !== "done") {
+                    const infoRow = document.createElement("div");
+                    infoRow.style.margin = "5px 0";
+                    infoRow.style.fontSize = "14px";
+                    infoRow.style.fontWeight = "500"; // Bolder font
+                    infoRow.style.color = "#333"; // Darker text
+                    infoRow.style.backgroundColor = "#e3f2fd"; // Default light blue background
+                    infoRow.style.padding = "8px";
+                    infoRow.style.borderRadius = "4px";
+                    infoRow.style.width = "100%";
+                    infoRow.style.display = "flex";
+                    infoRow.style.justifyContent = "space-between";
+                    infoRow.style.alignItems = "center";
+
+                    // Add a color picker for each field
+                    const colorPicker = document.createElement("input");
+                    colorPicker.type = "color";
+                    colorPicker.value = "#e3f2fd"; // Default light blue
+                    colorPicker.style.marginLeft = "10px";
+                    colorPicker.style.cursor = "pointer";
+                    colorPicker.oninput = (e) => {
+                        infoRow.style.backgroundColor = e.target.value;
+                    };
+
+                    const label = document.createElement("span");
+                    label.textContent = `${formatKey(key)}: ${item[key]}`;
+                    infoRow.appendChild(label);
+                    infoRow.appendChild(colorPicker);
+                    card.appendChild(infoRow);
+                }
+            }
+
+            // Status Indicator
+            const statusElement = document.createElement("div");
+            statusElement.style.marginTop = "10px";
+            statusElement.style.fontSize = "16px";
+            statusElement.style.fontWeight = "600"; // Bolder font
+            statusElement.style.display = "flex";
+            statusElement.style.justifyContent = "space-between";
+            statusElement.style.alignItems = "center";
+            statusElement.style.width = "100%";
+            statusElement.style.padding = "8px";
+            statusElement.style.borderRadius = "4px";
+            statusElement.style.backgroundColor = item.done ? "#d4edda" : "#f8d7da"; // Stronger green and red
+
+            const statusText = document.createElement("span");
+            statusText.textContent = item.done ? "✅ Done" : "❌ Not Done";
+            statusText.style.color = item.done ? "#155724" : "#721c24"; // Stronger green and red
+
+            // Add a color picker for the status background
+            const statusColorPicker = document.createElement("input");
+            statusColorPicker.type = "color";
+            statusColorPicker.value = item.done ? "#d4edda" : "#f8d7da"; // Default green or red
+            statusColorPicker.style.marginLeft = "10px";
+            statusColorPicker.style.cursor = "pointer";
+            statusColorPicker.oninput = (e) => {
+                statusElement.style.backgroundColor = e.target.value;
+            };
+
+            statusElement.appendChild(statusText);
+            statusElement.appendChild(statusColorPicker);
+            card.appendChild(statusElement);
+
+            // Create toggle button
+            const toggleButton = document.createElement("button");
+            toggleButton.textContent = "Change Status";
+            toggleButton.style.marginTop = "10px";
+            toggleButton.style.cursor = "pointer";
+            toggleButton.style.padding = "8px 12px";
+            toggleButton.style.border = "none";
+            toggleButton.style.borderRadius = "5px";
+            toggleButton.style.background = item.done ? "#28a745" : "#dc3545"; // Stronger green and red
+            toggleButton.style.color = "white";
+            toggleButton.style.fontSize = "14px";
+            toggleButton.style.fontWeight = "500"; // Bolder font
+            toggleButton.onclick = () => toggleRoutineStatus(filename, index, item.done, card, statusElement, toggleButton);
+
+            card.appendChild(toggleButton);
+            container.appendChild(card);
+        });
+    } else {
+        container.textContent = "No data available.";
+    }
+
+    return container;
+}
+
+/**
+ * Converts a JSON key to a user-friendly label.
+ */
+function formatKey(key) {
+    const keyMappings = {
+        machine_name: "Máquina",
+        operator_name: "Operador",
+        process_description: "Descrição Do Processo",
+    };
+
+    return keyMappings[key] || key.replace(/_/g, " ").replace(/\b\w/g, (char) => char.toUpperCase());
+}
+
+/**
+ * Function to toggle routine status and update JSON on the server
+ */
+function toggleRoutineStatus(filename, routineIndex, currentStatus, card, statusElement, toggleButton) {
+    const newStatus = !currentStatus;
+
+    fetch('/update_routine_status', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            filename: filename,
+            routine_index: routineIndex,
+            done: newStatus
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === "success") {
+            // Update UI immediately
+            card.style.background = newStatus ? "#e8f5e9" : "#ffebee"; // Light green if done, light red if not
+            statusElement.style.backgroundColor = newStatus ? "#d4edda" : "#f8d7da"; // Stronger green and red
+            statusElement.querySelector("span").textContent = newStatus ? "✅ Done" : "❌ Not Done";
+            statusElement.querySelector("span").style.color = newStatus ? "#155724" : "#721c24"; // Stronger green and red
+            toggleButton.style.background = newStatus ? "#28a745" : "#dc3545"; // Stronger green and red
+        } else {
+            alert("Error updating status: " + data.message);
+        }
+    })
+    .catch(error => {
+        console.error("Error updating routine status:", error);
+    });
+}
